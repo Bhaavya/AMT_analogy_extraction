@@ -1,0 +1,999 @@
+
+<style>
+
+ 
+
+
+crowd-card{
+	width: 95%;
+	padding: 3px;
+	margin: 15px;
+	height: 300px;
+	 overflow: scroll;
+}
+  .content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  /*background-color: white;*/
+
+  /*justify-items: center;*/
+  /*align-items: center;*/
+}
+
+.page{
+	width: 100%
+}
+
+/*crowd-entity-annotation{
+	display: none;
+}*/
+
+.textp{
+	padding: 15px;
+}
+
+full-instructions img {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  display: block;
+    border: 0.1px solid lightgray;
+height: auto;
+
+}
+
+
+
+</style>
+
+  
+
+
+	<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+	<script src="https://unpkg.com/split.js/dist/split.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+	<crowd-entity-annotation
+	id="annotator"
+  name="crowd-entity-annotation"
+  header="Webpage text content"
+  labels="[]"
+text="{%for line in body.replace('</span>','').replace('<span style=\"background:yellow\">','').replace('<br><br>','<br>').split('<br>')%}
+{{line|safe}}
+{%endfor%}"
+>
+<div id="split2" class="split2" style="display: flex;
+    flex-direction: row;width: 97%; margin-bottom: 80px">
+<div id="three" style="width: 100%">  
+ 	<br>
+    			<h3>Most Relevant Sentences</h3>
+    	<crowd-card style='height: 120px; width:98%;padding: 15px;overflow: scroll;margin-left: 14px'>
+
+      <br>
+	{% for c in snip_cnt %}
+	<div style="display: flex;">
+		<p id = "body_label{{c}}" style="max-width: 70%"class="textp">{{ snippet[c]|safe}}</p>
+<crowd-button class="jmp1" id="more{{c}}" href="javascript:getFomattedTxt2({{c}})" variant="link" style='margin-left: auto;'>
+        Jump to text
+      </crowd-button>
+  </div>
+  <br>
+      {% endfor %}
+
+</div>
+</crowd-card>
+</div>
+</div>
+
+
+<div id='addBtn' class="addBtn">
+
+      <crowd-button id="addLabel" style='width: 70%; margin: 10px;' href="javascript:addLblClick()">Add another analogy instance label</crowd-button>
+       <br>
+	     <br>
+	     <br>
+  </div>
+    	 <div id="hdr" class="content">
+    <div class="page">
+    	<crowd-button id="next" href="javascript:nextCalled()" variant="primary" style='float: right;'>
+        Next
+      </crowd-button>
+    			<h2 id="task_hdr" >Subtask 1: Does this webpage contain any analogy?</h2>
+    			<br>
+    		</div>
+    	</div>
+
+	 <div id="cls" class="content">
+    <div class="page">
+    		<crowd-radio-group>
+    			<br>
+	    <crowd-radio-button name="c1" id="c1" value="1">Webpage contains Analogy</crowd-radio-button>
+	    <crowd-radio-button name="c2" id="c2" value="2">Webpage does not contain any Analogy</crowd-radio-button>
+	    <crowd-radio-button name="c3" id="c3" value="3">Unsure</crowd-radio-button>
+
+	    
+	    </crowd-radio-group>
+	</div>
+</div>
+	  <div id="cls2" >
+ <br>
+    	<div style="display: flex;">
+    	<a style="font-size:16pt; text-align: center; width: 100%" href={{url}} title="Click to open the webpage in a new tab" target="_blank">{{ title |safe}}  </a>
+    	<!-- <crowd-button  href="javascript:showfullTxt()" variant="normal" style='margin-left: auto;'> -->
+        <!-- Show full webpage text -->
+      <!-- </crowd-button> -->
+  </div>
+  <div class="split" style="display: flex;
+    flex-direction: row;">
+ <div id="one" style="min-width: 90px">  
+ 	<br>
+    			<h3>Most Relevant Sentences</h3>
+    	<crowd-card style='height: 400px; width:100%;padding: 15px;overflow: scroll;margin-bottom:40px;'>
+
+      <br>
+	{% for c in snip_cnt %}
+	<div style="display: flex;">
+<p id = "body_label{{c}}" style="max-width: 70%"class="textp">{{ snippet[c]|safe}}</p>
+<crowd-button class="jmp2" id="more{{c}}" href="javascript:moreCalled({{c}})" variant="link" style='margin-left: auto;'>
+        Jump to text
+      </crowd-button>
+  </div>
+  <br>
+      {% endfor %}
+    			</crowd-card>
+</div>
+<div id = "two" style="min-width: 90px">
+	 	<br>
+<h3 >Webpage Text Content</h3>
+<crowd-card id = "moretxtcard" style='height: 400px; width: 100%; padding: 15px;overflow: scroll;'>
+    	
+<p id = "moretxt" class="textp"></p>
+</crowd-card>
+
+</div>
+</div>
+</div>
+<div id = "survey" style="background:white;" class="content">
+	    <div class="page">
+	    
+    			<h4 style="margin:15px">1. Mental Demand: How mentally demanding was the task?</h4>
+
+    		<crowd-radio-group style="margin:15px;">
+    		<span>Not at all </span>
+	    <crowd-radio-button name="nm1" id="nm1" value="1">1</crowd-radio-button>
+	    <crowd-radio-button name="nm2" id="nm2" value="2">2</crowd-radio-button>
+	    <crowd-radio-button name="nm3" id="nm3" value="3">3</crowd-radio-button>
+	    <crowd-radio-button name="nm4" id="nm4" value="4">4</crowd-radio-button>
+	    <crowd-radio-button name="nm5" id="nm5" value="5">5</crowd-radio-button>
+	    <crowd-radio-button name="nm6" id="nm6" value="6">6</crowd-radio-button>
+	    <crowd-radio-button name="nm7" id="nm7" value="7">7</crowd-radio-button>
+	    <span>Very much </span>
+	    </crowd-radio-group>
+
+	    <h4 style="margin:15px">2. Performance: How successful were you in accomplishing what
+you were asked to do?</h4>
+
+    		<crowd-radio-group style="margin:15px;">
+    		<span>Not at all </span>
+	    <crowd-radio-button name="np1" id="np1" value="1">1</crowd-radio-button>
+	    <crowd-radio-button name="np2" id="np2" value="2">2</crowd-radio-button>
+	    <crowd-radio-button name="np3" id="np3" value="3">3</crowd-radio-button>
+	    <crowd-radio-button name="np4" id="np4" value="4">4</crowd-radio-button>
+	    <crowd-radio-button name="np5" id="np5" value="5">5</crowd-radio-button>
+	    <crowd-radio-button name="np6" id="np6" value="6">6</crowd-radio-button>
+	    <crowd-radio-button name="np7" id="np7" value="7">7</crowd-radio-button>
+	    <span>Very much </span>
+	    </crowd-radio-group>
+
+	    <h4 style="margin:15px">3. Effort: How hard did you have to work to accomplish your level of performance?</h4>
+
+    		<crowd-radio-group style="margin:15px;">
+    		<span>Not at all </span>
+	    <crowd-radio-button name="ne1" id="ne1" value="1">1</crowd-radio-button>
+	    <crowd-radio-button name="ne2" id="ne2" value="2">2</crowd-radio-button>
+	    <crowd-radio-button name="ne3" id="ne3" value="3">3</crowd-radio-button>
+	    <crowd-radio-button name="ne4" id="ne4" value="4">4</crowd-radio-button>
+	    <crowd-radio-button name="ne5" id="ne5" value="5">5</crowd-radio-button>
+	    <crowd-radio-button name="ne6" id="ne6" value="6">6</crowd-radio-button>
+	    <crowd-radio-button name="ne7" id="ne7" value="7">7</crowd-radio-button>
+	    <span>Very much </span>
+	    </crowd-radio-group>
+
+
+
+	     <h4 style="margin:15px">4. Frustration: How insecure, discouraged, irritated, stressed,
+and annoyed were you while doing the task?</h4>
+
+    		<crowd-radio-group style="margin:15px;">
+    		<span>Not at all </span>
+	    <crowd-radio-button name="nf1" id="nf1" value="1">1</crowd-radio-button>
+	    <crowd-radio-button name="nf2" id="nf2" value="2">2</crowd-radio-button>
+	    <crowd-radio-button name="nf3" id="nf3" value="3">3</crowd-radio-button>
+	    <crowd-radio-button name="nf4" id="nf4" value="4">4</crowd-radio-button>
+	    <crowd-radio-button name="nf5" id="nf5" value="5">5</crowd-radio-button>
+	    <crowd-radio-button name="nf6" id="nf6" value="6">6</crowd-radio-button>
+	    <crowd-radio-button name="nf7" id="nf7" value="7">7</crowd-radio-button>
+	    <span>Very much </span>
+	    </crowd-radio-group>
+
+
+
+	     <h4 style="margin:15px">5. How useful did you find the "Most Relevant Sentences" in completing the task?</h4>
+	   
+    		<crowd-radio-group style="margin:15px;">
+    		  <span>Not at all </span>
+	    <crowd-radio-button name="s1" id="s1" value="1">1</crowd-radio-button>
+	    <crowd-radio-button name="s2" id="s2" value="2">2</crowd-radio-button>
+	    <crowd-radio-button name="s3" id="s3" value="3">3</crowd-radio-button>
+	    <crowd-radio-button name="s4" id="s4" value="4">4</crowd-radio-button>
+	    <crowd-radio-button name="s5" id="s5" value="5">5</crowd-radio-button>
+	    <crowd-radio-button name="s6" id="s6" value="6">6</crowd-radio-button>
+	    <crowd-radio-button name="s7" id="s7" value="7">7</crowd-radio-button>
+	    <span>Very much </span>
+	    </crowd-radio-group>
+
+
+	    <h4 style="margin:15px">6. How familiar were you with the content of the webpage prior to the task?</h4>
+
+    		<crowd-radio-group style="margin:15px;">
+    		<span>Not at all </span>
+	    <crowd-radio-button name="k1" id="k1" value="1">1</crowd-radio-button>
+	    <crowd-radio-button name="k2" id="k2" value="2">2</crowd-radio-button>
+	    <crowd-radio-button name="k3" id="k3" value="3">3</crowd-radio-button>
+	    <crowd-radio-button name="k4" id="k4" value="4">4</crowd-radio-button>
+	    <crowd-radio-button name="k5" id="k5" value="5">5</crowd-radio-button>
+	    <crowd-radio-button name="k6" id="k6" value="6">6</crowd-radio-button>
+	    <crowd-radio-button name="k7" id="k7" value="7">7</crowd-radio-button>
+	    <span>Very much </span>
+	    </crowd-radio-group>
+
+
+	     <h4 style="margin:15px">7. How fair is the reward amount for the task?</h4>
+
+    		<crowd-radio-group style="margin:15px;">
+    		  <span>Not at all </span>
+	    <crowd-radio-button name="r1" id="r1"  value="1">1</crowd-radio-button>
+	    <crowd-radio-button name="r2" id="r2"  value="2">2</crowd-radio-button>
+	    <crowd-radio-button name="r3" id="r3"  value="3">3</crowd-radio-button>
+	    <crowd-radio-button name="r4" id="r4"  value="4">4</crowd-radio-button>
+	    <crowd-radio-button name="r5" id="r5" value="5">5</crowd-radio-button>
+	    <crowd-radio-button name="r6" id="r6" value="6">6</crowd-radio-button>
+	    <crowd-radio-button name="r7" id="r7" value="7">7</crowd-radio-button>
+	    <span>Very much </span>
+	    </crowd-radio-group>
+
+
+
+
+	   </div>
+	</div>
+
+ <full-instructions header="Analogy Labeling HIT Instructions">
+	    	<ul>
+	    	<li> This HIT consists of 2-3 subtasks. You will see one subtask at a time. Upon completing each subtask, please click on the "Next" button in the upper right corner. </li>
+	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/next.png'}}" alt="Next button" width="20%" >
+
+	    	<li> Once you click "Next", you will <b> NOT </b> be able to go back and modify your answer for the previous subtask. So, please only click Next when you are ready. </li>
+	    	<li> In the first subtask, please read the Webpage Text Content to identify whether the page contains any analogies or not. Then, select the corresponding radio button. You may also click on Unsure if you are not confident about either options.<br>
+	    		<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/radio.png'}}" alt="Radio buttons" width="70%"  >
+	    	Most Relevant Sentences might help provide an overview of the webpage and locate any analogies. 
+	    	You may click on Jump To Text to scroll to the corresponding sentence in the Webpage Text Content.  <br>
+	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/summary.png'}}" alt="Summary" width="70%" >
+	    	 	    		    	However, please read the entire Webpage Text Content for accuracy.<br>
+	    	 	    		    	You can scroll both the sentences and the Webpage Text Content up or down to read the full text. <br>
+	    	You can also click on the title in the center to open the webpage in another tab as an additional reference. <br>
+	    		    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/title.png'}}" alt="Title" width="70%" >
+
+	    	 However, please use the Webpage Text Content <b>ONLY</b> to make your judgement. 
+
+
+	    </li>
+	    	<li> If you selected "Webpage contains Analogy" in the previous step, the next subtask is to highlight all analogy instances in the Webpage Text Content. <br> 
+
+	    		Again, click on Jump to Text in the Most Relevant Sentences section to scroll to the corresponding sentence in the Webpage Text Content. <br>
+	    	Once you've identified an analogy instance, First, click on the "Analogy Instance 1" label from the right pane. <br>
+
+	    		    		    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/anins.png'}}" alt="Instance Label" width="70%" >
+
+
+	    	Then, highlight the analogy instance in the webpage. <br>
+	    		    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/highlight.png'}}" alt="Highlighting" width="70%" >
+
+	    	If the webpage contains multiple different analogy instances, click on "Add another analogy instance label" button. Then, click on the newly added label(s) and highlight the corresponding analogy instance(s). <br>
+	    		    		    		    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/addlbl.png'}}" alt="Add Label" width="70%" >
+
+	    	If you wish to delete a highlighted instance, click on the 'X' above it.
+	    		    		    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/del.png'}}" alt="Delete" width="20%" >
+
+	    </li>
+	    <li> In the last subtask, please share your experience with completing the HIT by selecting your answers for all the questions on a scale of 1 (Not at all) to 7 (Very Much).
+	    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/qs.png'}}" alt="Survey" width="70%" >
+
+	    </li>
+	    <li> After completing all the subtasks, click on the "Submit" button. </li>
+	    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/submit.png'}}" alt="Submit button" width="20%" >
+
+
+	    </ul>
+	    
+	    </full-instructions>
+	    <short-instructions>
+	     Identify whether the webpage contains analogies or not.
+	     <p><strong>Webpage contains Analogy: </strong> 
+	    The webpage text content contains one or more analogies </p>
+	    <p><strong>Webpage does not contain any Analogy: </strong>  The webpage contains no analogies </p>
+	    <p> Then, click on the "Next" button. </p>
+	    
+      
+      
+	    </short-instructions>
+	
+>
+</crowd-entity-annotation>
+
+
+
+
+<script>
+// let snip_snts = [];
+
+	function checkSurvey(){
+		if (((document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nm1").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nm2").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nm3").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nm4").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nm5").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nm6").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nm7").getAttribute("aria-selected") == "false")) || ((document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("np1").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("np2").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("np3").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("np4").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("np5").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("np6").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("np7").getAttribute("aria-selected") == "false")) || ((document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("ne1").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("ne2").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("ne3").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("ne4").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("ne5").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("ne6").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("ne7").getAttribute("aria-selected") == "false")) || ((document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nf1").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nf2").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nf3").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nf4").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nf5").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nf6").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("nf7").getAttribute("aria-selected") == "false")) || ((document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("s1").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("s2").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("s3").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("s4").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("s5").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("s6").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("s7").getAttribute("aria-selected") == "false")) || ((document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("k1").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("k2").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("k3").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("k4").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("k5").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("k6").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("k7").getAttribute("aria-selected") == "false")) || ((document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("r1").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("r2").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("r3").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("r4").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("r5").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("r6").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("r7").getAttribute("aria-selected") == "false"))){
+      	return 1
+      }
+
+		return 0
+	}
+
+	
+	function validateForm(){
+
+		if (window.curProg == 0){
+			if ((document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("c1").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("c2").getAttribute("aria-selected") == "false") && (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("c3").getAttribute("aria-selected") == "false") )
+      {
+      	alert('Please label the webpage!')
+      }
+      else{
+      	alert('Please click on the Next button and complete the next task!')
+      }
+
+      return false
+
+	}
+	else if (window.curProg == 1 && window.maxProg==2){
+ if (document.querySelector("crowd-entity-annotation").shadowRoot.querySelector('crowd-span-selection').shadowRoot.querySelector('div').querySelector('mark')== null)
+ {
+ 	 alert('Please identify at least one analogy instance!')
+
+ }
+ else{
+  	alert('Please click on the Next button and complete the next task!')
+ }
+return false 
+	}
+	else if (checkSurvey()=='1'){
+		alert('Please answer all the questions!')
+		return false
+	}
+
+
+	return true
+}
+
+function getInitialTxt(snippet,txt){
+	const data = {
+        "snippet":snippet,
+        "txt": txt,
+        "wid":'{{wid|tojson}}'
+       
+    }
+// https://timan103.cs.illinois.edu/analogy_labeling4/
+    fetch("https://timan103.cs.illinois.edu/analogy_labeling4/get_snip", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    }).then(response => {
+        response.json().then(data => {
+          document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('moretxt').innerHTML  = data.ftxt
+          
+     
+      })
+    })
+
+}
+
+function getFomattedTxt(snippet,cxt) {
+  
+    const data = {
+        "snippet":snippet,
+        "txt": cxt,
+        "wid":'{{wid|tojson}}'
+    }
+    // https://timan103.cs.illinois.edu/analogy_labeling4
+
+    fetch("https://timan103.cs.illinois.edu/analogy_labeling4/get_snip", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    }).then(response => {
+        response.json().then(data => {
+          var fcxt = data.ftxt 
+
+
+          console.log('last',fcxt)
+          
+           var ihtml = document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('moretxt').innerHTML  
+$('#moretxt', $('crowd-entity-annotation')[0].shadowRoot).html(ihtml.replace('<a id="imhere"></a>',''));
+ihtml = document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('moretxt').innerHTML  
+$('#moretxt', $('crowd-entity-annotation')[0].shadowRoot).html(ihtml.replace(fcxt, '<a id="imhere"></a>'+fcxt));
+
+$('#moretxtcard', $('crowd-entity-annotation')[0].shadowRoot).animate({scrollTop: document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('imhere').offsetTop-10},500)
+          
+      })
+    })
+}
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+function getFomattedTxt2(c) {
+  var snippet = [{{ snippet | tojson  }}[c]]
+
+    const data = {
+        "snippet":snippet,
+        "txt": {{sent_bdy|tojson}},
+         "wid":'{{wid|tojson}}',
+       "add_a":true
+    }
+    // https://timan103.cs.illinois.edu/analogy_labeling4
+
+    fetch("https://timan103.cs.illinois.edu/analogy_labeling4/get_snip", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    }).then(response => {
+        response.json().then(data => {
+          var fcxt = data.ftxt 
+
+
+          console.log('last',fcxt)
+
+          var prevhtml =  document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('#annotator').shadowRoot.firstElementChild.nextElementSibling.innerHTML
+          
+        
+
+document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('#annotator').shadowRoot.firstElementChild.nextElementSibling.innerHTML = fcxt
+
+      var st =  document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('#annotator').shadowRoot.getElementById('imhere').offsetTop-10
+
+$(document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('#annotator')).animate({scrollTop:st},100)
+
+  
+
+ console.log('last2xs',fcxt,st)
+sleep(600).then(() => {
+document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('#annotator').shadowRoot.firstElementChild.nextElementSibling.innerHTML
+          = prevhtml
+         $(document.querySelector("crowd-entity-annotation").shadowRoot 
+   .querySelector('crowd-form').querySelector('form').querySelector('#annotator')).animate({scrollTop: st},500)
+          console.log(st)
+          
+      })
+    })
+    })
+}
+
+
+
+
+	function moreCalled(c){
+
+		    console.log({{ snippet_cxt|safe }},{{ sents|safe }})
+
+
+document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('moretxtcard').style.display = 'block'
+var ssc = [-1,-1]
+var snip_snts = [-1,-1]
+	var snpcl = {{ snippet_cxt|safe }}[c].length
+	ssc[0] = {{ snippet_cxt|safe }}[c][0]
+	ssc[1] = {{ snippet_cxt|safe }}[c][snpcl-1]
+
+
+	// snip_snts[0] = Math.max(0,ssc[0]-2)
+	snip_snts[0] = ssc[0]
+	// snip_snts[1] = Math.min(ssc[1]+2,{{ sents|safe }}.length-1)
+	snip_snts[1] = ssc[1]
+
+
+
+
+
+
+	var start = {{ sents|safe }}[snip_snts[0]][0]
+	var end = {{ sents|safe }}[snip_snts[1]][1]
+	
+      var  cxt = {{sent_bdy|tojson}}.substring(start,end+1)
+    console.log(start,end,[{{ snippet | tojson  }}[c]])
+ getFomattedTxt([{{ snippet | tojson  }}[c]],cxt)
+
+}
+
+		
+
+	// 	function showfullTxt(){
+	// 		document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('moretxtcard').style.display = 'block'
+	// 		document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('moretxt').innerHTML = '{{body|safe}}'
+	// 		snip_snts = []
+	// 		for (var i=0;i<{{ snippet_cxt|safe }}.length;i++){
+	// 		snip_snts.push([-1,-1])
+	// 	}
+	// 	for (var i=0;i<{{sents|safe}}.length;i++){
+	// 	document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('more'.concat(i.toString())).disabled = false
+	// }
+
+	// 	}
+
+	function nextCalled(){
+		console.log("clicked")
+		if (window.curProg == 0){
+			if (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("c1").getAttribute("aria-selected") == "true"){
+      	document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').shadowRoot.getElementById('react-mount-point').querySelector('aside').parentNode.style.display='block'
+
+
+document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').getElementsByClassName('split2')[0].style.display = 'block'
+
+       document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('crowd-span-selection').style.display='block'
+
+       document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('cls').style.display='none'
+         document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('cls2').querySelector('.split').style.display='none'
+
+      document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('task_hdr').innerText = 'Subtask 2: Please click on an Analogy Instance Label from the right panel and highlight the analogy instance in the webpage text content'
+
+      document.querySelector('short-instructions').innerHTML =   'Click on the "Analogy Instance 1" label from the right pane, and highlight the analogy in the webpage text content. <br> If the webpage contains multiple different analogies, click on "Add another analogy instance label" button. Then, click on the newly added label(s) and highlight the corresponding analogy instance(s). After you\'ve identified and highlighted all analogy instances, click on the "Next" button.'
+	     
+
+
+       document.querySelector('crowd-entity-annotation').header = 'Webpage text content'
+
+      window.curProg += 1
+	window.maxProg += 1
+
+      document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('side-content').getElementsByClassName('label-pane-list')[0].getElementsByClassName('addBtn')[0].style.display = 'block'
+
+
+
+      }
+      else if ( (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("c2").getAttribute("aria-selected")== "true") || (document.querySelector("crowd-entity-annotation").shadowRoot
+      .getElementById("c3").getAttribute("aria-selected") == "true") ){
+
+       document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('cls').style.display='none'
+   document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('cls2').style.display='none'
+
+      document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('task_hdr').innerText = 'Subtask 2: Please answer the following questions based on your experience completing this HIT'
+ document.querySelector('short-instructions').innerHTML =   ''
+
+
+ document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('survey').style.display='block'
+
+  document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('next').style.display='none'
+
+  document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.disabled = false
+
+       document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.background = '#ec7211'
+
+document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.border = '#ec7211'
+
+      document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.color = 'white'
+
+      	window.curProg += 1
+
+      	 
+      document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('side-content').getElementsByClassName('label-pane-list')[0].getElementsByClassName('addBtn')[0].style.display = 'none'
+
+
+		}
+	else{
+		 alert('Please label the webpage!')
+	}
+
+	}
+
+	else if (window.curProg == 1){
+		 if (document.querySelector("crowd-entity-annotation").shadowRoot.querySelector('crowd-span-selection').shadowRoot.querySelector('div').querySelector('mark')!= null){
+document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').getElementsByClassName('split2')[0].style.display = 'none'
+
+      document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').shadowRoot.getElementById('react-mount-point').querySelector('aside').parentNode.style.display='none'
+
+       document.querySelector('crowd-entity-annotation').header = ''
+
+
+      document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('side-content').getElementsByClassName('label-pane-list')[0].getElementsByClassName('addBtn')[0].style.display = 'none'
+
+
+       document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('crowd-span-selection').style.display='none'
+
+      document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('task_hdr').innerText = 'Subtask 3: Please answer the following questions based on your experience completing this HIT'
+
+       document.querySelector('short-instructions').innerHTML =   ''
+
+ document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('survey').style.display='block'
+
+  document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('next').style.display='none'
+
+    document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.disabled = false
+
+       document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.background = '#ec7211'
+
+document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.border = '#ec7211'
+
+      document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.color = 'white'
+
+      	window.curProg += 1
+
+		}
+	else{
+		 alert('Please identify at least one analogy instance!')
+	}
+
+	}
+
+}
+
+	function hideNext(){
+		
+
+      document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').shadowRoot.getElementById('react-mount-point').querySelector('aside').parentNode.style.display='none'
+
+       document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('crowd-span-selection').style.display='none'
+
+       document.querySelector('crowd-entity-annotation').header = ''
+
+ 
+	}
+
+	document.addEventListener('all-crowd-elements-ready', () => {
+
+		document
+      .querySelector('crowd-entity-annotation')
+      .shadowRoot
+      .querySelector('crowd-form')
+      .form
+      .prepend(split2);
+
+      if ({{condition|tojson}}==1){
+Array.from(document
+      .querySelector('crowd-entity-annotation')
+      .shadowRoot
+      .querySelector('crowd-form')
+      .form.getElementsByClassName('split2')[0].getElementsByClassName('jmp1')).forEach(element => {
+    element.style.display = 'none'
+})
+
+ document.querySelector('full-instructions').innerHTML = `
+<ul>
+	    	<li> This HIT consists of 2-3 subtasks. You will see one subtask at a time. Upon completing each subtask, please click on the "Next" button in the upper right corner. </li>
+	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/next.png'}}" alt="Next button" width="20%" >
+
+	    	<li> Once you click "Next", you will <b> NOT </b> be able to go back and modify your answer for the previous subtask. So, please only click Next when you are ready. </li>
+	    	<li> In the first subtask, please read the Webpage Text Content to identify whether the page contains any analogies or not. Then, select the corresponding radio button. You may also click on Unsure if you are not confident about either options.<br>
+	    		<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/radio.png'}}" alt="Radio buttons" width="70%"  >
+	    	Most Relevant Sentences might help provide an overview of the webpage and locate any analogies. 
+	    	 <br>
+	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/summary2.png'}}" alt="Summary" width="70%" >
+	    	 	    		    	However, please read the entire Webpage Text Content for accuracy.<br>
+	    	 	    		    	You can scroll both the sentences and the Webpage Text Content up or down to read the full text. <br>
+	    	You can also click on the title in the center to open the webpage in another tab as an additional reference. <br>
+	    		    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/title.png'}}" alt="Title" width="70%" >
+
+	    	 However, please use the Webpage Text Content <b>ONLY</b> to make your judgement. 
+
+
+	    </li>
+	    	<li> If you selected "Webpage contains Analogy" in the previous step, the next subtask is to highlight all analogy instances in the Webpage Text Content. <br> 
+
+	    	Once you've identified an analogy instance, First, click on the "Analogy Instance 1" label from the right pane. <br>
+
+	    		    		    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/anins.png'}}" alt="Instance Label" width="70%" >
+
+
+	    	Then, highlight the analogy instance in the webpage. <br>
+	    		    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/highlight.png'}}" alt="Highlighting" width="70%" >
+
+	    	If the webpage contains multiple different analogy instances, click on "Add another analogy instance label" button. Then, click on the newly added label(s) and highlight the corresponding analogy instance(s). <br>
+	    		    		    		    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/addlbl.png'}}" alt="Add Label" width="70%" >
+
+	    	If you wish to delete a highlighted instance, click on the 'X' above it.
+	    		    		    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/del.png'}}" alt="Delete" width="20%" >
+
+	    </li>
+	    <li> In the last subtask, please share your experience with completing the HIT by selecting your answers for all the questions on a scale of 1 (Not at all) to 7 (Very Much).
+	    		    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/qs.png'}}" alt="Survey" width="70%" >
+
+	    </li>
+	    <li> After completing all the subtasks, click on the "Submit" button. </li>
+	    	    	<img src="{{'https://timan103.cs.illinois.edu/analogy_labeling4/static/imgs/submit.png'}}" alt="Submit button" width="20%" >
+
+
+	    </ul>`
+
+
+      } 
+
+     var div2 = document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').firstElementChild
+
+    var div1 =  document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').firstElementChild.nextElementSibling.nextElementSibling
+
+
+
+
+      div1.style.height = '400px'
+      div1.style.overflow = 'scroll'
+      div1.style.padding = '15px'
+
+Split(['#one', '#two'], {
+  gutterSize: 15
+});
+
+Split([div1, div2], {
+  gutterSize: 15,direction: "vertical"
+});
+		window.curProg = 0;
+		window.maxProg = 1;
+
+		// for (var i=0;i<{{ snippet_cxt|safe }}.length;i++){
+		// 	snip_snts.push([-1,-1])
+		// }
+
+		getInitialTxt({{snippet|tojson}},{{sent_bdy|tojson}})
+
+		 hideNext()
+
+		 document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').querySelector('crowd-span-selection').removeAttribute('required')
+
+
+	document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').onsubmit = function(e ) {
+    if (!validateForm()) {
+        e.preventDefault();
+    }
+    
+else{
+    	const data = {
+        "hid": '{{hid|tojson}}',
+        "wid":'{{wid|tojson}}'
+       
+    }
+// https://timan103.cs.illinois.edu/analogy_labeling4/
+    fetch("https://timan103.cs.illinois.edu/analogy_labeling4/submit", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    }).then(response => {
+        
+     
+      
+    })
+    }
+}
+document
+      .querySelector('crowd-entity-annotation')
+      .shadowRoot
+      .querySelector('crowd-form')
+      .form
+      .prepend(cls2);
+
+  if ({{condition|tojson}}=='1'){
+
+    Array.from(document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('cls2').querySelector('.split').getElementsByClassName('jmp2')).forEach(element => {
+    element.style.display = 'none'
+})
+
+}
+
+    document
+      .querySelector('crowd-entity-annotation')
+      .shadowRoot
+      .querySelector('crowd-form')
+      .form
+      .prepend(cls);
+
+      document
+      .querySelector('crowd-entity-annotation')
+      .shadowRoot
+      .querySelector('crowd-form')
+      .form
+      .prepend(hdr);
+
+
+
+      document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.disabled = true
+
+       document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.background = 'darkgray'
+
+document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.border = 'darkgray'
+
+
+document.querySelector('crowd-entity-annotation').shadowRoot
+      .querySelector('crowd-form').shadowRoot.querySelector('[data-testid="crowd-submit"]').firstElementChild.style.color = 'lightgray'
+
+     
+
+      document
+      .querySelector('crowd-entity-annotation')
+      .shadowRoot
+      .querySelector('crowd-form')
+      .form
+      .append(survey);
+
+
+
+       document.querySelector("crowd-entity-annotation").shadowRoot.getElementById('survey').style.display='none'
+
+
+      document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector("footer-content").firstElementChild.style.display = 'none';
+
+
+     
+
+      document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-span-selection').shadowRoot.firstElementChild.nextElementSibling.style.fontSize = '16px'
+
+      document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-span-selection').shadowRoot.firstElementChild.nextElementSibling.style.lineHeight = '1rem'
+
+       document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-span-selection').shadowRoot.firstElementChild.nextElementSibling.style.padding = '15px'
+
+
+ document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('side-content').getElementsByClassName('label-pane-title')[0].firstElementChild.innerText = 'Analogy Instance Labels'
+
+      document
+      .querySelector('crowd-entity-annotation').shadowRoot.querySelector('crowd-form#wrapform.awsui').removeAttribute('required')
+
+ 	 var lbls = [{'label': 'anlgy1', 'shortDisplayName': 'ai1', 'fullDisplayName': 'Analogy Instance 1'}];
+ 	 document.querySelector('crowd-entity-annotation').labels = getLabels(lbls);
+ 	 annotator._constructLabelButtons();
+
+ 	       document.querySelector("crowd-entity-annotation").shadowRoot.querySelector('.label-pane-list').prepend(addBtn)
+
+
+ 	        document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('side-content').getElementsByClassName('label-pane-list')[0].getElementsByClassName('addBtn')[0].style.display = 'none'
+
+document.querySelector("crowd-entity-annotation").shadowRoot
+      .querySelector('crowd-form').querySelector('form').getElementsByClassName('split2')[0].style.display = 'none'
+
+
+})
+
+	function getLabels(e){
+	return e.map(function(e) {
+                    return {
+                        label: e.label,
+                        shortDisplayName: e.shortDisplayName || e.label,
+                        fullDisplayName: e.fullDisplayName || e.label
+                    }
+                })
+	}
+
+
+var addLblClick = function() {
+    	var idx = annotator.labels.length + 1;
+    	const myNode = document.querySelector("crowd-entity-annotation").shadowRoot.querySelector('.label-pane-list')
+
+    	
+  while (myNode.childNodes.length > 1) {
+    myNode.removeChild(myNode.lastChild)
+}
+
+    	annotator.labels.push({'label': 'anlgy'+String(idx), 'shortDisplayName': 'ai'+String(idx), 'fullDisplayName': 'Analogy Instance '+String(idx)})
+    	// console.log(annotator.labels);
+    	 var lbls = annotator.labels
+    	//  console.log(lbls);
+     document.querySelector('crowd-entity-annotation').labels = getLabels(lbls);
+   
+    annotator._constructLabelButtons();
+
+    
+  };
+
+
+</script>
