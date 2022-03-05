@@ -3,8 +3,8 @@ import urllib.request
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 import datetime 
-ACCESS_ID = 'AKIARBODJWRY5LGA2SG4'
-SECRET_KEY = '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'
+ACCESS_ID = ACCESS_ID
+SECRET_KEY = SECRET_KEY
 MTURK_SANDBOX = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
 
 MTURK_PROD = 'https://mechanicalturk.amazonaws.com'
